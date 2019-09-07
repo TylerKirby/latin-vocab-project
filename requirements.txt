@@ -1,0 +1,7 @@
+cltk
+pandas
+numpy
+matplotlib
+sklearn
+jupyter
+jupyterlab
