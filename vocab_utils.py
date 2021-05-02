@@ -18,22 +18,16 @@ class CorpusAnalytics:
             text_path = texts_path + text
             with open(text_path) as file:
                 raw_text = file.read()
-            clean_text = pattern.sub(' ', raw_text).strip()
+            clean_text = pattern.sub(' ', raw_text).strip().lower()
             text_title = text[:-4]
             lemmata = lemmatizer.lemmatize(clean_text.split(" "))
             lemmata = [l for l in lemmata if l[1] != '']
             tokenized_lemmata = [t[1] for t in lemmata]
-            ner_tags = list(zip(tokenized_lemmata, tag_ner("lat", tokenized_lemmata)))  # NER tagger requires capitalization to be preserved
-            ner_filtered_tags = [t[0].lower() for t in ner_tags if not t[1]]
-            ners = [t[0].lower() for t in ner_tags if t[1]]
             self.analytics[text_title] = {
                 "clean_text": clean_text,
                 "lemmata": lemmata,
                 "tokenized_lemmata": tokenized_lemmata,
-                "lemmata_frequencies": Counter(tokenized_lemmata),
-                "filtered_lemmata_frequencies": Counter(ner_filtered_tags),
-                "ner_filtered_tokens": ner_filtered_tags,
-                "ners": ners
+                "lemmata_frequencies": Counter(tokenized_lemmata)
             }
 
 with open("diederich.txt") as f:
