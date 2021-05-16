@@ -30,7 +30,8 @@ class CorpusAnalytics:
                 "lemmata_frequencies": Counter(tokenized_lemmata)
             }
 
-with open("diederich.txt") as f:
+
+with open("../assets/diederich.txt") as f:
     diederich_vocab_raw = [l.split(";")[0] for l in f.readlines()[3:]]
 diederich_vocab = []
 for v in diederich_vocab_raw:
@@ -38,7 +39,6 @@ for v in diederich_vocab_raw:
         v = v.split(" ")[0]
     v = v.strip(punctuation)
     diederich_vocab.append(v)
-
 
 if __name__ == "__main__":
     ap_latin_texts = [
