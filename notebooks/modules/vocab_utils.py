@@ -18,7 +18,7 @@ class CorpusAnalytics:
             text_path = texts_path + text
             with open(text_path) as file:
                 raw_text = file.read()
-            clean_text = pattern.sub(' ', raw_text).strip().lower()
+            clean_text = pattern.sub(' ', raw_text).strip()
             text_title = text[:-4]
             lemmata = lemmatizer.lemmatize(clean_text.split(" "))
             lemmata = [l for l in lemmata if l[1] != '']
