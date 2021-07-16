@@ -1,11 +1,12 @@
 from utils.corpus import CorpusAnalytics
 
-sample_corpus = [
-    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/vergil/aen1.txt"
-]
+with open(
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/vergil/aen1.txt", "r"
+) as f:
+    text = f.read()
+
 analytics = CorpusAnalytics("lat")
-processed_texts = analytics.process_corpus(sample_corpus)
-vergil_1 = processed_texts[0]
+vergil_1 = analytics.process_text(text)
 
 
 def test_process_text_title():
@@ -19,5 +20,22 @@ def test_process_text_raw_text():
 
 
 def test_process_text_clean_text():
-    correct = "Vergil: Aeneid I P. VERGILI"
+    correct = "vergil aeneid i p. vergili"
     assert vergil_1.clean_text[: len(correct)] == correct
+
+
+def test_process_text_lemmata():
+    correct = [("arma", "arma"), ("virumque", "vir"), ("cano", "cano")]
+    assert vergil_1.lemmata[9:12] == correct
+
+
+def test_clean_text():
+    sample = "Vergil   Aeneid &#26 Arma: virumque, cano?"
+    correct = "Vergil Aeneid Arma virumque cano."
+    assert analytics.clean_text(sample) == correct
+
+
+def test_lemmata_freq():
+    sample = [("vergil", "vergil"), ("vergil", "vergil"), ("et", "et")]
+    correct = {"vergil": 2, "et": 1}
+    assert analytics.lemmata_freq(sample) == correct
