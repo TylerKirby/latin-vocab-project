@@ -39,3 +39,35 @@ def test_lemmata_freq():
     sample = [("vergil", "vergil"), ("vergil", "vergil"), ("et", "et")]
     correct = {"vergil": 2, "et": 1}
     assert analytics.lemmata_freq(sample) == correct
+
+
+def test_ner_tagger():
+    sample = (
+        "Arma virumque cano Sequano Caesar flumen. Pallasne exurere classem Argivom atque ipsos potuit "
+        "submergere ponto unius ob noxam et furias Aiacis Oilei."
+    )
+    correct = [
+        ("Arma", False),
+        ("virumque", False),
+        ("cano", False),
+        ("Sequano", True),
+        ("Caesar", True),
+        ("flumen.", False),
+        ("Pallasne", False), # Beginning of second sentence and cltk tagger does not detect it correctly.
+        ("exurere", False),
+        ("classem", False),
+        ("Argivom", True),
+        ("atque", False),
+        ("ipsos", False),
+        ("potuit", False),
+        ("submergere", False),
+        ("ponto", False),
+        ("unius", False),
+        ("ob", False),
+        ("noxam", False),
+        ("et", False),
+        ("furias", False),
+        ("Aiacis", True),
+        ("Oilei.", True),
+    ]
+    assert analytics.ner_tagger(sample) == correct

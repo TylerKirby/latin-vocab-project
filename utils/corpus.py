@@ -1,9 +1,12 @@
 import re
 from collections import Counter
 from dataclasses import dataclass
+from itertools import chain
 from typing import Dict, List, Tuple
 
 from cltk.lemmatize.lat import LatinBackoffLemmatizer
+from cltk.ner.ner import tag_ner
+from cltk.sentence.lat import LatinPunktSentenceTokenizer
 
 
 @dataclass
@@ -19,6 +22,7 @@ class CorpusAnalytics:
     def __init__(self, lang):
         if lang == "lat":
             self.lemmatizer = LatinBackoffLemmatizer()
+            self.sent_tokenizer = LatinPunktSentenceTokenizer()
 
     @staticmethod
     def clean_text(text: str, lower: bool = False) -> str:
@@ -50,6 +54,29 @@ class CorpusAnalytics:
         :return: dict of lemmata frequency
         """
         return dict(Counter([l[1] for l in lemmata]))
+
+    def ner_tagger(self, text: str) -> List[Tuple[str, bool]]:
+        """
+        Tag named entities in text.
+        :param text: text
+        :return: list of booleans - true indicates named entity
+        """
+        sentences = self.sent_tokenizer.tokenize(text)
+        tagged_sentences = []
+        for sentence in sentences:
+            tokens = sentence.split(" ")
+            cltk_ner_tags = tag_ner(iso_code="lat", input_tokens=tokens)
+            ner_tags = []
+            for i in range(len(cltk_ner_tags)):
+                if i == 0:
+                    ner_tags.append((tokens[i], cltk_ner_tags[i] == True))
+                elif tokens[i][0].isupper():
+                    ner_tags.append((tokens[i], True))
+                else:
+                    ner_tags.append((tokens[i], cltk_ner_tags[i] == True))
+            tagged_sentences.append(ner_tags)
+        tagged_text = list(chain.from_iterable(tagged_sentences))
+        return tagged_text
 
     def process_text(self, text: str) -> ProcessedText:
         """
