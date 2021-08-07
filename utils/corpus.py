@@ -50,22 +50,40 @@ class CorpusAnalytics:
     def lemmata_freq(lemmata: List[Tuple[str, str]]) -> Dict[str, int]:
         """
         Collate lemmata for vocab frequency.
+        Reduces secondary definitions to single lemma. E.g., all "cum2" counts are under "cum".
         :param lemmata: list of lemmata tuples
         :return: dict of lemmata frequency
         """
-        return dict(Counter([l[1] for l in lemmata]))
+        freq_dict_temp = dict(Counter([l[1] for l in lemmata]))
+        freq_dict = {}
+        for k, v in freq_dict_temp.items():
+            if k[-1].isnumeric():
+                try:
+                    freq_dict[k[:-1]] += v
+                except KeyError:
+                    freq_dict[k[:-1]] = v
+            else:
+                try:
+                    freq_dict[k] += v
+                except KeyError:
+                    freq_dict[k] = v
+        return freq_dict
 
-    def ner_tagger(self, text: str) -> List[Tuple[str, bool]]:
+    def ner_tagger(self, text: str, use_spacy=True) -> List[Tuple[str, bool]]:
         """
         Tag named entities in text.
         :param text: text
+        :param use_spacy: flag to use Spacy NER tagger. Note that it runs slowly.
         :return: list of booleans - true indicates named entity
         """
         sentences = self.sent_tokenizer.tokenize(text)
         tagged_sentences = []
         for sentence in sentences:
             tokens = sentence.split(" ")
-            cltk_ner_tags = tag_ner(iso_code="lat", input_tokens=tokens)
+            if use_spacy:
+                cltk_ner_tags = tag_ner(iso_code="lat", input_tokens=tokens)
+            else:
+                cltk_ner_tags = tokens
             ner_tags = []
             for i in range(len(cltk_ner_tags)):
                 if i == 0:
@@ -78,7 +96,7 @@ class CorpusAnalytics:
         tagged_text = list(chain.from_iterable(tagged_sentences))
         return tagged_text
 
-    def process_text(self, text: str) -> ProcessedText:
+    def process_text(self, text: str, filter_ner=True) -> ProcessedText:
         """
         Collates text, clean text, lemmata, and lemmata frequencies for text.
         :param text: raw Latin Library text
@@ -86,8 +104,20 @@ class CorpusAnalytics:
         """
         clean_text = self.clean_text(text, lower=True)
         text_title = text.split("\n")[0]
-        lemmata = self.lemmatizer.lemmatize(clean_text.split(" "))
-        lemmata_frequencies = self.lemmata_freq(lemmata)
+        only_alphabetic_pattern = re.compile("[^a-z]")
+        clean_tokens = [
+            only_alphabetic_pattern.sub("", t) for t in clean_text.split(" ")
+        ]  # Remove punc from tokens
+        lemmata = self.lemmatizer.lemmatize(clean_tokens)
+        if filter_ner:
+            clean_text_ner = self.clean_text(text, lower=False)
+            ner_tags = self.ner_tagger(clean_text_ner, use_spacy=False)
+            filter_lemmata = [
+                t[0] for t in zip(lemmata, ner_tags) if t[1][1] is not True
+            ]
+            lemmata_frequencies = self.lemmata_freq(filter_lemmata)
+        else:
+            lemmata_frequencies = self.lemmata_freq(lemmata)
         processed_text = ProcessedText(
             title=text_title,
             raw_text=text,
@@ -97,14 +127,21 @@ class CorpusAnalytics:
         )
         return processed_text
 
-    def process_corpus(self, texts: List[str]) -> List[ProcessedText]:
+    def process_corpus(self, texts: List[str]) -> Dict[str, int]:
         """
-        Processes a list of texts.
+        Processes a list of texts into a single cumulative frequency dictionary.
         :param texts: list of absolute paths to Latin Library texts
         """
-        processed_texts = []
+        lemmata_frequencies = []
         for text_path in texts:
             with open(text_path, "r") as f:
                 text = f.read()
-            processed_texts.append(self.process_text(text))
-        return processed_texts
+            lemmata_frequencies.append(self.process_text(text).lemmata_frequencies)
+        cumulative_freq = {}
+        for freq in lemmata_frequencies:
+            for k, v in freq.items():
+                if k in cumulative_freq:
+                    cumulative_freq[k] += v
+                else:
+                    cumulative_freq[k] = v
+        return cumulative_freq

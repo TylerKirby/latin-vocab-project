@@ -6,25 +6,28 @@ with open(
     text = f.read()
 
 analytics = CorpusAnalytics("lat")
-vergil_1 = analytics.process_text(text)
 
 
 def test_process_text_title():
+    vergil_1 = analytics.process_text(text)
     correct = "Vergil: Aeneid I"
     assert vergil_1.title == correct
 
 
 def test_process_text_raw_text():
+    vergil_1 = analytics.process_text(text)
     correct = "Vergil: Aeneid I\n\t\t \n\n\t"
     assert vergil_1.raw_text[: len(correct)] == correct
 
 
 def test_process_text_clean_text():
+    vergil_1 = analytics.process_text(text)
     correct = "vergil aeneid i p. vergili"
     assert vergil_1.clean_text[: len(correct)] == correct
 
 
 def test_process_text_lemmata():
+    vergil_1 = analytics.process_text(text)
     correct = [("arma", "arma"), ("virumque", "vir"), ("cano", "cano")]
     assert vergil_1.lemmata[9:12] == correct
 
@@ -41,6 +44,15 @@ def test_lemmata_freq():
     assert analytics.lemmata_freq(sample) == correct
 
 
+def test_lemmata_freq_no_numbers():
+    sample = [("cum", "cum2"), ("cum", "cum2"), ("cum", "cum")]
+    correct = {"cum": 3}
+    assert analytics.lemmata_freq(sample) == correct
+    sample = [("cum", "cum2"), ("cum", "cum2")]
+    correct = {"cum": 2}
+    assert analytics.lemmata_freq(sample) == correct
+
+
 def test_ner_tagger():
     sample = (
         "Arma virumque cano Sequano Caesar flumen. Pallasne exurere classem Argivom atque ipsos potuit "
@@ -53,7 +65,10 @@ def test_ner_tagger():
         ("Sequano", True),
         ("Caesar", True),
         ("flumen.", False),
-        ("Pallasne", False), # Beginning of second sentence and cltk tagger does not detect it correctly.
+        (
+            "Pallasne",
+            False,
+        ),  # Beginning of second sentence and cltk tagger does not detect it correctly.
         ("exurere", False),
         ("classem", False),
         ("Argivom", True),
@@ -71,3 +86,13 @@ def test_ner_tagger():
         ("Oilei.", True),
     ]
     assert analytics.ner_tagger(sample) == correct
+
+
+def test_process_corpus():
+    test_texts = [
+        "/Users/tyler/Projects/latin-vocab-project/tests/test_text1.txt",
+        "/Users/tyler/Projects/latin-vocab-project/tests/test_text2.txt",
+    ]
+    actual = analytics.process_corpus(test_texts)
+    correct = {"quo": 2, "abutor": 2, "patientia": 2, "nos": 1}
+    assert actual == correct
