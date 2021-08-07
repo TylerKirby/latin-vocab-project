@@ -54,14 +54,20 @@ class CorpusAnalytics:
         :param lemmata: list of lemmata tuples
         :return: dict of lemmata frequency
         """
-        freq_dict_temp = dict(Counter([l[1] for l in lemmata]))
+        freq_dict_temp = dict(Counter([l[1] for l in lemmata if len(l[1]) > 0]))
         freq_dict = {}
+        only_alphabetic_pattern = re.compile("[^a-z]")
         for k, v in freq_dict_temp.items():
             if k[-1].isnumeric():
                 try:
                     freq_dict[k[:-1]] += v
                 except KeyError:
                     freq_dict[k[:-1]] = v
+            elif only_alphabetic_pattern.sub("", k) != k:
+                try:
+                    freq_dict[only_alphabetic_pattern.sub("", k)] += v
+                except KeyError:
+                    freq_dict[only_alphabetic_pattern.sub("", k)] = v
             else:
                 try:
                     freq_dict[k] += v
@@ -144,4 +150,4 @@ class CorpusAnalytics:
                     cumulative_freq[k] += v
                 else:
                     cumulative_freq[k] = v
-        return cumulative_freq
+        return dict(sorted(cumulative_freq.items(), key=lambda item: item[1], reverse=True))
