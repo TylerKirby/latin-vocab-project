@@ -96,3 +96,22 @@ def test_process_corpus():
     actual = analytics.process_corpus(test_texts)
     correct = {"quo": 2, "abutor": 2, "patientia": 2, "nos": 1}
     assert actual == correct
+
+
+def test_is_numeral():
+    # Case 1: is not a numeral, contains no numerals
+    actual = analytics.is_numeral("puer")
+    correct = False
+    assert actual == correct
+    # Case 2: is not a numeral, contains a numeral
+    actual = analytics.is_numeral("vis")
+    correct = False
+    assert actual == correct
+    # Case 3: is a numeral, not vix
+    actual = analytics.is_numeral("c")
+    correct = True
+    assert actual == correct
+    # Case 4: is a numeral, is vix
+    actual = analytics.is_numeral("vix")
+    correct = False
+    assert actual == correct

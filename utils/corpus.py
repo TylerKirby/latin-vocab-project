@@ -47,7 +47,12 @@ class CorpusAnalytics:
         return clean_text
 
     @staticmethod
-    def lemmata_freq(lemmata: List[Tuple[str, str]]) -> Dict[str, int]:
+    def is_numeral(token: str) -> bool:
+        pattern = r"(?![vV]im|[dD][īi]c[īi])[IīVXLCDMiīvxlcdm](?<!vix)$"  # matches all numerals except vix
+        match = re.search(pattern, token)
+        return bool(match)
+
+    def lemmata_freq(self, lemmata: List[Tuple[str, str]]) -> Dict[str, int]:
         """
         Collate lemmata for vocab frequency.
         Reduces secondary definitions to single lemma. E.g., all "cum2" counts are under "cum".
@@ -58,16 +63,21 @@ class CorpusAnalytics:
         freq_dict = {}
         only_alphabetic_pattern = re.compile("[^a-z]")
         for k, v in freq_dict_temp.items():
+            # Check if the lemma ends in a numeral and reduce, e.g. cum2 -> cum
             if k[-1].isnumeric():
                 try:
                     freq_dict[k[:-1]] += v
                 except KeyError:
                     freq_dict[k[:-1]] = v
+            # Check if lemma has any punctuation and reduce, e.g. con-vero -> convero
             elif only_alphabetic_pattern.sub("", k) != k:
                 try:
                     freq_dict[only_alphabetic_pattern.sub("", k)] += v
                 except KeyError:
                     freq_dict[only_alphabetic_pattern.sub("", k)] = v
+            # Check if lemma is a numeral, skip if true
+            elif self.is_numeral(k):
+                continue
             else:
                 try:
                     freq_dict[k] += v
