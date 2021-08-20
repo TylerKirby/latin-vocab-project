@@ -22,25 +22,25 @@ def test_process_text_raw_text():
 
 def test_process_text_clean_text():
     vergil_1 = analytics.process_text(text)
-    correct = "vergil aeneid i p. vergili"
+    correct = "uergil aeneid i p. uergili"
     assert vergil_1.clean_text[: len(correct)] == correct
 
 
 def test_process_text_lemmata():
     vergil_1 = analytics.process_text(text)
-    correct = [("arma", "arma"), ("virumque", "vir"), ("cano", "cano")]
+    correct = [("arma", "arma"), ("uirumque", "vir"), ("cano", "cano")]
     assert vergil_1.lemmata[9:12] == correct
 
 
 def test_clean_text():
     sample = "Vergil   Aeneid &#26 Arma: virumque, cano?"
-    correct = "Vergil Aeneid Arma virumque cano."
+    correct = "Uergil Aeneid Arma uirumque cano."
     assert analytics.clean_text(sample) == correct
 
 
 def test_lemmata_freq():
     sample = [("vergil", "vergil"), ("vergil", "vergil"), ("et", "et")]
-    correct = {"vergil": 2, "et": 1}
+    correct = {"uergil": 2, "et": 1}
     assert analytics.lemmata_freq(sample) == correct
 
 
@@ -104,9 +104,8 @@ def test_is_numeral():
     correct = False
     assert actual == correct
     # Case 2: is not a numeral, contains a numeral
-    actual = analytics.is_numeral("vis")
-    correct = False
-    assert actual == correct
+    assert analytics.is_numeral("vis") == False
+    assert analytics.is_numeral("vergil") == False
     # Case 3: is a numeral, not vix
     actual = analytics.is_numeral("c")
     correct = True

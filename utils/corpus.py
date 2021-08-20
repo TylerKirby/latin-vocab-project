@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple
 from cltk.lemmatize.lat import LatinBackoffLemmatizer
 from cltk.ner.ner import tag_ner
 from cltk.sentence.lat import LatinPunktSentenceTokenizer
+from cltk.alphabet.lat import normalize_lat, dehyphenate, drop_latin_punctuation
 
 
 @dataclass
@@ -33,6 +34,8 @@ class CorpusAnalytics:
         :param lower: whether to lower case text
         :return: clean text
         """
+        # Normalize orthography
+        text = normalize_lat(text, drop_accents=True, drop_macrons=True, jv_replacement=True, ligature_replacement=True)
         # Remove non end of sentence punctuation
         punc_pattern = re.compile("[^a-zA-Z.?!\s]")
         clean_text = punc_pattern.sub("", text)
@@ -48,9 +51,15 @@ class CorpusAnalytics:
 
     @staticmethod
     def is_numeral(token: str) -> bool:
-        pattern = r"(?![vV]im|[dD][īi]c[īi])[IīVXLCDMiīvxlcdm](?<!vix)$"  # matches all numerals except vix
+        pattern = r"^(?![vV]im|[dD][īi]c[īi])*[IīVXLCDMiīvxlcdm]*(?<!vix)$"  # matches all numerals except vix
         match = re.search(pattern, token)
         return bool(match)
+
+    def clean_lemma(self, token) -> str:
+        token = normalize_lat(token, drop_accents=True, drop_macrons=True, jv_replacement=True, ligature_replacement=True)
+        token = dehyphenate(token)
+        token = drop_latin_punctuation(token)
+        return token
 
     def lemmata_freq(self, lemmata: List[Tuple[str, str]]) -> Dict[str, int]:
         """
@@ -59,10 +68,13 @@ class CorpusAnalytics:
         :param lemmata: list of lemmata tuples
         :return: dict of lemmata frequency
         """
-        freq_dict_temp = dict(Counter([l[1] for l in lemmata if len(l[1]) > 0]))
+        lemmata = [l[1] for l in lemmata if len(l[1]) > 0]
+        clean_lemmata = [self.clean_lemma(l) for l in lemmata]
+        freq_dict_temp = dict(Counter(clean_lemmata))
         freq_dict = {}
         only_alphabetic_pattern = re.compile("[^a-z]")
         for k, v in freq_dict_temp.items():
+            # Normalize
             # Check if the lemma ends in a numeral and reduce, e.g. cum2 -> cum
             if k[-1].isnumeric():
                 try:
