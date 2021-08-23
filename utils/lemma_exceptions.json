@@ -77,7 +77,7 @@
   "obstaris": "obsto",
   "pigraris": "pigror",
   "gregaris": "gergo",
-  "duaris": "aris",
+  "duaris": "ara",
   "labaris": "labo",
   "artaris": "arto",
   "utaris": "utor",
@@ -96,7 +96,7 @@
   "disiactaris": "disiacto",
   "disiectaris": "disiacto",
   "significaris": "significo",
-  "rosa": "rosaris",
+  "rosaris": "rosa",
   "migraris": "migro",
   "columbaris": "columbor",
   "subpeditaris": "subpedito",
@@ -211,7 +211,7 @@
   "secubaris": "secubo",
   "numeraris": "numero",
   "ingeneraris": "ingenero",
-  "inupptaris": "innuptus",
+  "innuptaris": "innuptus",
   "sceleraris": "scelero",
   "claris": "clarus",
   "dearis": "dea",
@@ -220,5 +220,9 @@
   "obiurgaris": "obiurgo",
   "uoraris": "uoro",
   "excruciaris": "excrucio",
-  "nuptaris": "nupta"
+  "nuptaris": "nupta",
+  "inlustraris": "inlustro",
+  "inliciaris": "illicio",
+  "proculcaris":"proculco",
+  "terebraris": "terebro"
 }
