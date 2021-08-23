@@ -44,12 +44,33 @@ def test_lemmata_freq():
     assert analytics.lemmata_freq(sample) == correct
 
 
+def test_lemmata_freq_hyphenate():
+    sample = [("convero", "con-vero"), ("convero", "convero")]
+    correct = {"conuero": 2}
+    assert analytics.lemmata_freq(sample) == correct
+    sample = [("convero", "con-vero")]
+    correct = {"conuero": 1}
+    assert analytics.lemmata_freq(sample) == correct
+
+
+def test_lemmata_freq_aris_forms():
+    sample = [("fateor", "fateor"), ("fatearis", "fatearis")]
+    correct = {"fateor": 2}
+    assert analytics.lemmata_freq(sample) == correct
+
+
 def test_lemmata_freq_no_numbers():
     sample = [("cum", "cum2"), ("cum", "cum2"), ("cum", "cum")]
     correct = {"cum": 3}
     assert analytics.lemmata_freq(sample) == correct
     sample = [("cum", "cum2"), ("cum", "cum2")]
     correct = {"cum": 2}
+    assert analytics.lemmata_freq(sample) == correct
+
+
+def test_lemmata_freq_exclude():
+    sample = [("aeumlre", "aeumlre")]
+    correct = {}
     assert analytics.lemmata_freq(sample) == correct
 
 

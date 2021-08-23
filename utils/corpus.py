@@ -55,10 +55,50 @@ class CorpusAnalytics:
         match = re.search(pattern, token)
         return bool(match)
 
-    def clean_lemma(self, token) -> str:
+    @staticmethod
+    def clean_lemma(token) -> str:
         token = normalize_lat(token, drop_accents=True, drop_macrons=True, jv_replacement=True, ligature_replacement=True)
         token = dehyphenate(token)
         token = drop_latin_punctuation(token)
+        replacement_dict = {
+            "constaris": "consto",
+            "fatearis": "fateor",
+            "penetraris": "penetro",
+            "duraris": "duro",
+            "uagaris": "uagor",
+            "crearis": "creo",
+            "iactaris": "iacto",
+            "rearis": "reor",
+            "confitearis": "confiteor",
+            "commutaris": "commuto",
+            "flammaris": "flammo",
+            "uolaris": "uolo",
+            "moraris": "moror",
+            "manaris": "mano",
+            "formaris": "fumo",  # assuming o modulated to u
+            "mearis": "meor",
+            "amaris": "amo",
+            "ignaris": "ignarus",
+            "cunctaris": "cunctor",
+            "uiolaris": "uiolo",
+            "raris": "rarus",
+            "distaris": "disto",
+            "suppeditaris": "suppedito",
+            "permanaris": "permano",
+            "maris": "mare",
+            "celaris": "celo",
+            "usurparis": "usurpo",
+            "insinuaris": "insinuo",
+            "probaris": "probo",
+            "putaris": "puto",
+            "cessaris": "cesso",
+            "magnaris": "magnus",  # weird form
+            "figuraris": "figure",
+            "plagaris": "plago",
+            "sedaris": "sedo"
+        }
+        if token in replacement_dict:
+            return replacement_dict[token]
         return token
 
     def lemmata_freq(self, lemmata: List[Tuple[str, str]]) -> Dict[str, int]:
@@ -73,22 +113,16 @@ class CorpusAnalytics:
         freq_dict_temp = dict(Counter(clean_lemmata))
         freq_dict = {}
         only_alphabetic_pattern = re.compile("[^a-z]")
+        exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
         for k, v in freq_dict_temp.items():
-            # Normalize
-            # Check if the lemma ends in a numeral and reduce, e.g. cum2 -> cum
-            if k[-1].isnumeric():
-                try:
-                    freq_dict[k[:-1]] += v
-                except KeyError:
-                    freq_dict[k[:-1]] = v
             # Check if lemma has any punctuation and reduce, e.g. con-vero -> convero
-            elif only_alphabetic_pattern.sub("", k) != k:
+            if only_alphabetic_pattern.sub("", k) != k:
                 try:
                     freq_dict[only_alphabetic_pattern.sub("", k)] += v
                 except KeyError:
                     freq_dict[only_alphabetic_pattern.sub("", k)] = v
             # Check if lemma is a numeral, skip if true
-            elif self.is_numeral(k):
+            elif self.is_numeral(k) or k in exclude_list:
                 continue
             else:
                 try:
