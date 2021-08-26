@@ -158,7 +158,7 @@ class CorpusAnalytics:
         )
         return processed_text
 
-    def process_corpus(self, texts: List[str]) -> Dict[str, int]:
+    def process_corpus(self, texts: List[str], filter_ner=True) -> Dict[str, int]:
         """
         Processes a list of texts into a single cumulative frequency dictionary.
         :param texts: list of absolute paths to Latin Library texts
@@ -167,7 +167,7 @@ class CorpusAnalytics:
         for text_path in texts:
             with open(text_path, "r") as f:
                 text = f.read()
-            lemmata_frequencies.append(self.process_text(text).lemmata_frequencies)
+            lemmata_frequencies.append(self.process_text(text, filter_ner=filter_ner).lemmata_frequencies)
         cumulative_freq = {}
         for freq in lemmata_frequencies:
             for k, v in freq.items():
