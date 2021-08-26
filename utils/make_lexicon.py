@@ -1,19 +1,15 @@
+import json
 import pandas as pd
 
 from utils.corpus import CorpusAnalytics
 
 
 if __name__ == "__main__":
-    cat_luc_corpus = [
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius1.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius2.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius3.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius4.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius5.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius6.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/catullus.txt"
-    ]
+    with open("corpora.json") as f:
+        corpora = json.load(f)
     analytics = CorpusAnalytics("lat")
-    lexicon_freq = analytics.process_corpus(cat_luc_corpus)
-    df = pd.DataFrame.from_dict(lexicon_freq, orient="index", columns=["count"])
-    df.to_excel("luc_cat_sample.xlsx")
+    with pd.ExcelWriter("vocabulary_freq.xlsx") as writer:
+        for author in corpora.keys():
+            vocab_freq = analytics.process_corpus(corpora[author])
+            df = pd.DataFrame.from_dict(vocab_freq, orient="index", columns=["count"])
+            df.to_excel(writer, sheet_name=author)

@@ -1,0 +1,13 @@
+{
+  "lucretius": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius1.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius2.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius3.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius4.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius5.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius6.txt"
+  ],
+  "catullus": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/catullus.txt"
+  ]
+}
