@@ -60,8 +60,10 @@ class CorpusAnalytics:
         return bool(match)
 
     def clean_lemma(self, token) -> str:
+        if token[-3:] == "que":
+            token = token[:-3]
         exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
-        if token in exclude_list or self.is_numeral(token):
+        if token in exclude_list or self.is_numeral(token) or "lr" in token:
             return None
         token = normalize_lat(token, drop_accents=True, drop_macrons=True, jv_replacement=True, ligature_replacement=True)
         token = dehyphenate(token)

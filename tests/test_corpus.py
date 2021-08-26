@@ -135,3 +135,9 @@ def test_is_numeral():
     actual = analytics.is_numeral("vix")
     correct = False
     assert actual == correct
+
+
+def test_clean_lemma_no_que():
+    actual = analytics.clean_lemma("puerque")
+    correct = "puer"
+    assert actual == correct
