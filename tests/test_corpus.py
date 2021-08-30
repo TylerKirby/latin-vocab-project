@@ -141,3 +141,6 @@ def test_clean_lemma_no_que():
     actual = analytics.clean_lemma("puerque")
     correct = "puer"
     assert actual == correct
+    actual = analytics.clean_lemma("ubique")
+    correct = "ubique"
+    assert actual == correct

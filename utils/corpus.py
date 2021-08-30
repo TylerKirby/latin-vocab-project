@@ -60,7 +60,9 @@ class CorpusAnalytics:
         return bool(match)
 
     def clean_lemma(self, token) -> str:
-        if token[-3:] == "que":
+        # Remove enclitic -que from lemma
+        que_include = ["usque", "denique", "itaque", "uterque", "ubique", "undique", "utique", "utrimque", "plerique"]
+        if token[-3:] == "que" and token not in que_include:
             token = token[:-3]
         exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
         if token in exclude_list or self.is_numeral(token) or "lr" in token:
