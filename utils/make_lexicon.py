@@ -1,8 +1,8 @@
 import json
+
 import pandas as pd
 
 from utils.corpus import CorpusAnalytics
-
 
 if __name__ == "__main__":
     with open("corpora.json") as f:

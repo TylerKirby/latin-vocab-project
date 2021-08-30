@@ -1,13 +1,28 @@
 {
   "lucretius": [
     "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius1.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius2.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius3.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius4.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius5.txt",
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius6.txt"
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius2.txt",
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius3.txt",
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius4.txt",
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius5.txt",
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/lucretius/lucretius6.txt"
   ],
   "catullus": [
     "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/catullus.txt"
+  ],
+  "caesar": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/caesar/gall1.txt"
+  ],
+  "cicero": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/cicero/milo.txt"
+  ],
+  "livy": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/livy/liv.1.txt"
+  ],
+  "tacitus": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/tacitus/tac.ann1.txt"
+  ],
+  "cato": [
+    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/cato/cato.agri.txt"
   ]
 }

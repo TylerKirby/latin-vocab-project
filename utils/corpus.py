@@ -1,15 +1,15 @@
-import re
 import json
-import os
+import re
 from collections import Counter
 from dataclasses import dataclass
 from itertools import chain
 from typing import Dict, List, Tuple
 
+from cltk.alphabet.lat import (dehyphenate, drop_latin_punctuation,
+                               normalize_lat)
 from cltk.lemmatize.lat import LatinBackoffLemmatizer
 from cltk.ner.ner import tag_ner
 from cltk.sentence.lat import LatinPunktSentenceTokenizer
-from cltk.alphabet.lat import normalize_lat, dehyphenate, drop_latin_punctuation
 
 
 @dataclass
@@ -39,7 +39,13 @@ class CorpusAnalytics:
         :return: clean text
         """
         # Normalize orthography
-        text = normalize_lat(text, drop_accents=True, drop_macrons=True, jv_replacement=True, ligature_replacement=True)
+        text = normalize_lat(
+            text,
+            drop_accents=True,
+            drop_macrons=True,
+            jv_replacement=True,
+            ligature_replacement=True,
+        )
         # Remove non end of sentence punctuation
         punc_pattern = re.compile("[^a-zA-Z.?!\s]")
         clean_text = punc_pattern.sub("", text)
@@ -60,14 +66,40 @@ class CorpusAnalytics:
         return bool(match)
 
     def clean_lemma(self, token) -> str:
-        # Remove enclitic -que from lemma
-        que_include = ["usque", "denique", "itaque", "uterque", "ubique", "undique", "utique", "utrimque", "plerique"]
-        if token[-3:] == "que" and token not in que_include:
-            token = token[:-3]
+        # Return None if should exclude token
         exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
         if token in exclude_list or self.is_numeral(token) or "lr" in token:
             return None
-        token = normalize_lat(token, drop_accents=True, drop_macrons=True, jv_replacement=True, ligature_replacement=True)
+        # Remove enclitic -que from lemma
+        que_include = [
+            "usque",
+            "denique",
+            "itaque",
+            "uterque",
+            "ubique",
+            "undique",
+            "utique",
+            "utrimque",
+            "plerique",
+        ]
+        if token[-3:] == "que" and token not in que_include:
+            token = token[:-3]
+        # Remove enclitic -ve
+        vowels = ["a", "e", "i", "o", "u", "y"]
+        if (
+            len(token) > 2
+            and token[-3:] != "que"
+            and (token[-2:] == "ve" or (token[-2:] == "ue" and token[-3] not in vowels))
+        ):
+            token = token[:-2]
+        # Normalize and return token
+        token = normalize_lat(
+            token,
+            drop_accents=True,
+            drop_macrons=True,
+            jv_replacement=True,
+            ligature_replacement=True,
+        )
         token = dehyphenate(token)
         token = drop_latin_punctuation(token)
         if token in self.lemma_exceptions:
@@ -169,7 +201,9 @@ class CorpusAnalytics:
         for text_path in texts:
             with open(text_path, "r") as f:
                 text = f.read()
-            lemmata_frequencies.append(self.process_text(text, filter_ner=filter_ner).lemmata_frequencies)
+            lemmata_frequencies.append(
+                self.process_text(text, filter_ner=filter_ner).lemmata_frequencies
+            )
         cumulative_freq = {}
         for freq in lemmata_frequencies:
             for k, v in freq.items():
@@ -177,4 +211,6 @@ class CorpusAnalytics:
                     cumulative_freq[k] += v
                 else:
                     cumulative_freq[k] = v
-        return dict(sorted(cumulative_freq.items(), key=lambda item: item[1], reverse=True))
+        return dict(
+            sorted(cumulative_freq.items(), key=lambda item: item[1], reverse=True)
+        )
