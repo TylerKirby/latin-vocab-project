@@ -1,7 +1,6 @@
 from cltk.lemmatize.lat import LatinBackoffLemmatizer
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     lemmatizer = LatinBackoffLemmatizer(verbose=True)
     text = """Et
 uti eo introeas et circumspicias, uti inde exire possis. Uti bonum caelum

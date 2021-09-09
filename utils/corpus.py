@@ -3,7 +3,6 @@ import re
 from collections import Counter
 from dataclasses import dataclass
 from itertools import chain
-from lamonpy import Lamon
 from typing import Dict, List, Tuple, Union
 
 from cltk.alphabet.lat import (dehyphenate, drop_latin_punctuation,
@@ -11,6 +10,7 @@ from cltk.alphabet.lat import (dehyphenate, drop_latin_punctuation,
 from cltk.lemmatize.lat import LatinBackoffLemmatizer
 from cltk.ner.ner import tag_ner
 from cltk.sentence.lat import LatinPunktSentenceTokenizer
+from lamonpy import Lamon
 
 
 @dataclass
@@ -33,7 +33,7 @@ class CorpusAnalytics:
                 with open("../utils/lemma_exceptions.json") as f:
                     self.lemma_exceptions = json.loads(f.read())
                 self.exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
-            elif lemmatizer_type == "lemonpy":
+            elif lemmatizer_type == "lamonpy":
                 self.lemmatizer = Lamon()
                 self.lemma_exceptions = {}
                 self.exclude_list = []
@@ -100,7 +100,10 @@ class CorpusAnalytics:
             if (
                 len(token) > 2
                 and token[-3:] != "que"
-                and (token[-2:] == "ve" or (token[-2:] == "ue" and token[-3] not in vowels))
+                and (
+                    token[-2:] == "ve"
+                    or (token[-2:] == "ue" and token[-3] not in vowels)
+                )
             ):
                 token = token[:-2]
         # Normalize and return token
