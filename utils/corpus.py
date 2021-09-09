@@ -3,7 +3,8 @@ import re
 from collections import Counter
 from dataclasses import dataclass
 from itertools import chain
-from typing import Dict, List, Tuple
+from lamonpy import Lamon
+from typing import Dict, List, Tuple, Union
 
 from cltk.alphabet.lat import (dehyphenate, drop_latin_punctuation,
                                normalize_lat)
@@ -22,12 +23,20 @@ class ProcessedText:
 
 
 class CorpusAnalytics:
-    def __init__(self, lang):
+    def __init__(self, lang, lemmatizer_type):
+        self.lang = lang
+        self.lemmatizer_type = lemmatizer_type
         if lang == "lat":
-            self.lemmatizer = LatinBackoffLemmatizer()
             self.sent_tokenizer = LatinPunktSentenceTokenizer()
-            with open("../utils/lemma_exceptions.json") as f:
-                self.lemma_exceptions = json.loads(f.read())
+            if lemmatizer_type == "cltk":
+                self.lemmatizer = LatinBackoffLemmatizer()
+                with open("../utils/lemma_exceptions.json") as f:
+                    self.lemma_exceptions = json.loads(f.read())
+                self.exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
+            elif lemmatizer_type == "lemonpy":
+                self.lemmatizer = Lamon()
+                self.lemma_exceptions = {}
+                self.exclude_list = []
 
     @staticmethod
     def clean_text(text: str, lower: bool = False) -> str:
@@ -65,33 +74,35 @@ class CorpusAnalytics:
         match = re.search(pattern, token)
         return bool(match)
 
-    def clean_lemma(self, token) -> str:
-        # Return None if should exclude token
-        exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
-        if token in exclude_list or self.is_numeral(token) or "lr" in token:
+    def clean_lemma(self, token) -> Union[str, None]:
+        if token in self.exclude_list or self.is_numeral(token):
             return None
-        # Remove enclitic -que from lemma
-        que_include = [
-            "usque",
-            "denique",
-            "itaque",
-            "uterque",
-            "ubique",
-            "undique",
-            "utique",
-            "utrimque",
-            "plerique",
-        ]
-        if token[-3:] == "que" and token not in que_include:
-            token = token[:-3]
-        # Remove enclitic -ve
-        vowels = ["a", "e", "i", "o", "u", "y"]
-        if (
-            len(token) > 2
-            and token[-3:] != "que"
-            and (token[-2:] == "ve" or (token[-2:] == "ue" and token[-3] not in vowels))
-        ):
-            token = token[:-2]
+        if self.lemmatizer_type == "cltk":
+            # Return None if should exclude token
+            if "lr" in token:
+                return None
+            # Remove enclitic -que from lemma
+            que_include = [
+                "usque",
+                "denique",
+                "itaque",
+                "uterque",
+                "ubique",
+                "undique",
+                "utique",
+                "utrimque",
+                "plerique",
+            ]
+            if token[-3:] == "que" and token not in que_include:
+                token = token[:-3]
+            # Remove enclitic -ve
+            vowels = ["a", "e", "i", "o", "u", "y"]
+            if (
+                len(token) > 2
+                and token[-3:] != "que"
+                and (token[-2:] == "ve" or (token[-2:] == "ue" and token[-3] not in vowels))
+            ):
+                token = token[:-2]
         # Normalize and return token
         token = normalize_lat(
             token,
@@ -165,6 +176,7 @@ class CorpusAnalytics:
         """
         Collates text, clean text, lemmata, and lemmata frequencies for text.
         :param text: raw Latin Library text
+        :param filter_ner: filter proper nouns from text
         :return: processed Latin Library text
         """
         clean_text = self.clean_text(text, lower=True)
@@ -173,7 +185,11 @@ class CorpusAnalytics:
         clean_tokens = [
             only_alphabetic_pattern.sub("", t) for t in clean_text.split(" ")
         ]  # Remove punc from tokens
-        lemmata = self.lemmatizer.lemmatize(clean_tokens)
+        if self.lemmatizer_type == "cltk":
+            lemmata = self.lemmatizer.lemmatize(clean_tokens)
+        elif self.lemmatizer_type == "lamonpy":
+            _, lemmata = self.lemmatizer.tag(clean_text)[0]
+            lemmata = [("", t[2]) for t in lemmata]
         if filter_ner:
             clean_text_ner = self.clean_text(text, lower=False)
             ner_tags = self.ner_tagger(clean_text_ner, use_spacy=False)
@@ -196,6 +212,7 @@ class CorpusAnalytics:
         """
         Processes a list of texts into a single cumulative frequency dictionary.
         :param texts: list of absolute paths to Latin Library texts
+        :param filter_ner: filter proper nouns from texts
         """
         lemmata_frequencies = []
         for text_path in texts:
