@@ -36,7 +36,7 @@ class CorpusAnalytics:
             elif lemmatizer_type == "lamonpy":
                 self.lemmatizer = Lamon()
                 self.lemma_exceptions = {}
-                self.exclude_list = []
+                self.exclude_list = ["[UNK]", "."]
 
     @staticmethod
     def clean_text(text: str, lower: bool = False) -> str:
@@ -138,7 +138,10 @@ class CorpusAnalytics:
             if k is None:
                 continue
             # Check if lemma has any punctuation and reduce, e.g. con-vero -> convero
-            elif only_alphabetic_pattern.sub("", k) != k:
+            elif (
+                only_alphabetic_pattern.sub("", k) != k
+                and only_alphabetic_pattern.sub("", k) is not None
+            ):
                 try:
                     freq_dict[only_alphabetic_pattern.sub("", k)] += v
                 except KeyError:
