@@ -118,7 +118,7 @@ class CorpusAnalytics:
         token = drop_latin_punctuation(token)
         if token in self.lemma_exceptions:
             return self.lemma_exceptions[token]
-        return token.strip()
+        return token.strip().lower()
 
     def lemmata_freq(self, lemmata: List[Tuple[str, str]]) -> Dict[str, int]:
         """
@@ -127,7 +127,9 @@ class CorpusAnalytics:
         :param lemmata: list of lemmata tuples
         :return: dict of lemmata frequency
         """
-        lemmata = [l[1] for l in lemmata if len(l[1]) > 0]
+        lemmata = [
+            l[1] for l in lemmata if len(l[1]) > 0
+        ]  # TODO: pull out and put in process_text
         clean_lemmata = [self.clean_lemma(l) for l in lemmata]
         freq_dict_temp = dict(Counter(clean_lemmata))
         freq_dict = {}
