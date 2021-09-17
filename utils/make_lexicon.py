@@ -1,20 +1,28 @@
+import argparse
 import json
 
 import pandas as pd
+from tqdm import tqdm
 
 from utils.corpus import CorpusAnalytics
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-n", "--ner", help="Include analysis of NER", default=False)
+    args = parser.parse_args()
+
     with open("corpora.json") as f:
         corpora = json.load(f)
-    analytics = CorpusAnalytics("lat")
+    analytics = CorpusAnalytics("lat", lemmatizer_type="lamonpy")
     with pd.ExcelWriter("vocabulary_freq_no_proper_nouns.xlsx") as writer:
-        for author in corpora.keys():
+        for author in tqdm(corpora.keys(), desc="Authors"):
+            print(f"Processing {author}")
             vocab_freq = analytics.process_corpus(corpora[author])
             df = pd.DataFrame.from_dict(vocab_freq, orient="index", columns=["count"])
             df.to_excel(writer, sheet_name=author)
-    with pd.ExcelWriter("vocabulary_freq_with_proper_nouns.xlsx") as writer:
-        for author in corpora.keys():
-            vocab_freq = analytics.process_corpus(corpora[author], filter_ner=False)
-            df = pd.DataFrame.from_dict(vocab_freq, orient="index", columns=["count"])
-            df.to_excel(writer, sheet_name=author)
+    if args.ner:
+        with pd.ExcelWriter("vocabulary_freq_with_proper_nouns.xlsx") as writer:
+            for author in tqdm(corpora.keys()):
+                vocab_freq = analytics.process_corpus(corpora[author], filter_ner=False)
+                df = pd.DataFrame.from_dict(vocab_freq, orient="index", columns=["count"])
+                df.to_excel(writer, sheet_name=author)

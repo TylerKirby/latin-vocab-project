@@ -11,6 +11,7 @@ from cltk.lemmatize.lat import LatinBackoffLemmatizer
 from cltk.ner.ner import tag_ner
 from cltk.sentence.lat import LatinPunktSentenceTokenizer
 from lamonpy import Lamon
+from tqdm import tqdm
 
 
 @dataclass
@@ -36,7 +37,7 @@ class CorpusAnalytics:
             elif lemmatizer_type == "lamonpy":
                 self.lemmatizer = Lamon()
                 self.lemma_exceptions = {}
-                self.exclude_list = ["[UNK]", "."]
+                self.exclude_list = ["[UNK]", ".", "P0", "I0", "N0", "T0", "M0", "O0", "Q0", "Ti0", "L0", "Sp0"]
 
     @staticmethod
     def clean_text(text: str, lower: bool = False) -> str:
@@ -201,6 +202,8 @@ class CorpusAnalytics:
         if filter_ner:
             clean_text_ner = self.clean_text(text, lower=False)
             ner_tags = self.ner_tagger(clean_text_ner, use_spacy=False)
+            if self.lemmatizer_type == "lamonpy":
+                lemmata= [l for l in lemmata if l[1] != "."]
             filter_lemmata = [
                 t[0] for t in zip(lemmata, ner_tags) if t[1][1] is not True
             ]
@@ -223,7 +226,7 @@ class CorpusAnalytics:
         :param filter_ner: filter proper nouns from texts
         """
         lemmata_frequencies = []
-        for text_path in texts:
+        for text_path in tqdm(texts, desc="Texts"):
             with open(text_path, "r") as f:
                 text = f.read()
             lemmata_frequencies.append(

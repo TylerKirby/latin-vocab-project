@@ -356,3 +356,14 @@ def test_basic_test_lamonpy():
     assert actual.clean_text == correct_clean_text
     assert actual.lemmata == correct_lemmata
     assert actual.lemmata_frequencies == correct_lemmata_frequencies
+
+
+def test_lamonpy_sui_issue():
+    actual = lamonpy_analytics.process_text("suus sui")
+    correct = {"suus": 2}
+    assert actual.lemmata_frequencies == correct
+
+
+def test_lamonpy_p():
+    actual = lamonpy_analytics.process_text("P. amo puellam.", filter_ner=True)
+    correct = {"amo": 1, "puella": 1}
