@@ -227,11 +227,14 @@ class CorpusAnalytics:
         """
         lemmata_frequencies = []
         for text_path in tqdm(texts, desc="Texts"):
-            with open(text_path, "r") as f:
-                text = f.read()
-            lemmata_frequencies.append(
-                self.process_text(text, filter_ner=filter_ner).lemmata_frequencies
-            )
+            try:
+                with open(text_path, "r") as f:
+                    text = f.read()
+                lemmata_frequencies.append(
+                    self.process_text(text, filter_ner=filter_ner).lemmata_frequencies
+                )
+            except:
+                print(f"Could not process {text_path}")
         cumulative_freq = {}
         for freq in lemmata_frequencies:
             for k, v in freq.items():
