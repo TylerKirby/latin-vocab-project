@@ -3,41 +3,42 @@ import os
 
 CORPUS_NAME = "classical"
 AUTHOR_DIRS = [
-    "caesar",
-    "cicero",
-    "horace",
-    "ovid",
-    "lucan",
-    "juvenal",
-    "martial",
-    "nepos",
-    "livy",
-    "tacitus",
-    "quintilian",
-    "suetonius",
-    "apuleius",
-    "sen"
+    "vergil"
+    # "caesar",
+    # "cicero",
+    # "horace",
+    # "ovid",
+    # "lucan",
+    # "juvenal",
+    # "martial",
+    # "nepos",
+    # "livy",
+    # "tacitus",
+    # "quintilian",
+    # "suetonius",
+    # "apuleius",
+    # "sen"
 ]
 AUTHOR_TXTS = {
-    "catullus": ["catullus.txt"],
-    "propertius": ["propertius1.txt"],
-    "tibullus": ["tibullus1.txt", "tibullus2.txt", "tibullus3.txt"],
-    "persius": ["persius.txt"],
-    "sallust": ["sall.1.txt", "sall.2.txt"],
-    "petronius": ["petronius.txt", "petronius1.txt"],
-    "pliny_younger": [
-        "pliny.ep1.txt",
-        "pliny.ep2.txt",
-        "pliny.ep3.txt",
-        "pliny.ep4.txt",
-        "pliny.ep5.txt",
-        "pliny.ep6.txt",
-        "pliny.ep7.txt",
-        "pliny.ep8.txt",
-        "pliny.ep9.txt",
-        "pliny.ep10.txt",
-        "pliny.panegyricus.txt"
-    ]
+    # "catullus": ["catullus.txt"],
+    # "propertius": ["propertius1.txt"],
+    # "tibullus": ["tibullus1.txt", "tibullus2.txt", "tibullus3.txt"],
+    # "persius": ["persius.txt"],
+    # "sallust": ["sall.1.txt", "sall.2.txt"],
+    # "petronius": ["petronius.txt", "petronius1.txt"],
+    # "pliny_younger": [
+    #     "pliny.ep1.txt",
+    #     "pliny.ep2.txt",
+    #     "pliny.ep3.txt",
+    #     "pliny.ep4.txt",
+    #     "pliny.ep5.txt",
+    #     "pliny.ep6.txt",
+    #     "pliny.ep7.txt",
+    #     "pliny.ep8.txt",
+    #     "pliny.ep9.txt",
+    #     "pliny.ep10.txt",
+    #     "pliny.panegyricus.txt"
+    # ]
 }
 
 

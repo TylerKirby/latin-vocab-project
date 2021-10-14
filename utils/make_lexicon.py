@@ -9,10 +9,10 @@ from utils.corpus import CorpusAnalytics
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--ner", help="Include analysis of NER", default=False)
-    parser.add_argument("-c", "--corpora_path", help="Path to JSON of texts for corpora", default="corpora.json")
+    parser.add_argument("-c", "--corpora_path", help="Path to JSON of texts for corpora", default="../assets/classical_corpora.json")
     args = parser.parse_args()
 
-    with open("corpora.json") as f:
+    with open(args.corpora_path) as f:
         corpora = json.load(f)
     analytics = CorpusAnalytics("lat", lemmatizer_type="lamonpy")
     with pd.ExcelWriter("../frequency_tables/vocabulary_freq_no_proper_nouns.xlsx") as writer:
