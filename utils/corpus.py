@@ -37,7 +37,20 @@ class CorpusAnalytics:
             elif lemmatizer_type == "lamonpy":
                 self.lemmatizer = Lamon()
                 self.lemma_exceptions = {}
-                self.exclude_list = ["[UNK]", ".", "P0", "I0", "N0", "T0", "M0", "O0", "Q0", "Ti0", "L0", "Sp0"]
+                self.exclude_list = [
+                    "[UNK]",
+                    ".",
+                    "P0",
+                    "I0",
+                    "N0",
+                    "T0",
+                    "M0",
+                    "O0",
+                    "Q0",
+                    "Ti0",
+                    "L0",
+                    "Sp0",
+                ]
 
     @staticmethod
     def clean_text(text: str, lower: bool = False) -> str:
@@ -203,7 +216,7 @@ class CorpusAnalytics:
             clean_text_ner = self.clean_text(text, lower=False)
             ner_tags = self.ner_tagger(clean_text_ner, use_spacy=False)
             if self.lemmatizer_type == "lamonpy":
-                lemmata= [l for l in lemmata if l[1] != "."]
+                lemmata = [l for l in lemmata if l[1] != "."]
             filter_lemmata = [
                 t[0] for t in zip(lemmata, ner_tags) if t[1][1] is not True
             ]

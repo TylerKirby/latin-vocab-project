@@ -21,7 +21,7 @@ AUTHOR_DIRS = [
     "silius",
     "statius",
     "columella",
-    "hyginus"
+    "hyginus",
 ]
 AUTHOR_TXTS = {
     "manilius": [
@@ -31,11 +31,7 @@ AUTHOR_TXTS = {
         "manilius4.txt",
         "manilius5.txt",
     ],
-    "pomponius_mela": [
-        "pomponius1.txt",
-        "pomponius2.txt",
-        "pomponius3.txt"
-    ],
+    "pomponius_mela": ["pomponius1.txt", "pomponius2.txt", "pomponius3.txt"],
     "carmina_pripea": ["priapea.txt"],
     "ilias_latina": ["ilias.txt"],
     "germanicus": ["germanicus.txt"],
@@ -48,7 +44,7 @@ AUTHOR_TXTS = {
         "valeriusflaccus5.txt",
         "valeriusflaccus6.txt",
         "valeriusflaccus7.txt",
-        "valeriusflaccus8.txt"
+        "valeriusflaccus8.txt",
     ],
     "valerius_maximus": [
         "valmax1.txt",
@@ -59,7 +55,7 @@ AUTHOR_TXTS = {
         "valmax6.txt",
         "valmax7.txt",
         "valmax8.txt",
-        "valmax9.txt"
+        "valmax9.txt",
     ],
     "varro": [
         "varro.rr1.txt",
@@ -106,7 +102,7 @@ AUTHOR_TXTS = {
         "caesar/gall8.txt",
         "caesar/hisp.txt",
         "caesar/bellafr.txt",
-        "caesar/alex.txt"
+        "caesar/alex.txt",
     ],
     "pliny_maior": [
         "pliny.nh1.txt",
@@ -114,7 +110,7 @@ AUTHOR_TXTS = {
         "pliny.nh3.txt",
         "pliny.nh4.txt",
         "pliny.nh5.txt",
-        "pliny.nhpr.txt"
+        "pliny.nhpr.txt",
     ],
     "seneca_maior": [
         "seneca.contr1.txt",
@@ -167,7 +163,7 @@ AUTHOR_TXTS = {
         "quintilian/quintilian.decl.mai19.txt",
     ],
     "catullus": ["catullus.txt"],
-    "propertius": ["propertius1.txt"],
+    "propertius": ["propertius1.txt", "prop2.txt", "prop3.txt", "prop4.txt"],
     "tibullus": ["tibullus1.txt", "tibullus2.txt", "tibullus3.txt"],
     "persius": ["persius.txt"],
     "sallust": ["sall.1.txt", "sall.2.txt"],
@@ -183,8 +179,8 @@ AUTHOR_TXTS = {
         "pliny.ep8.txt",
         "pliny.ep9.txt",
         "pliny.ep10.txt",
-        "pliny.panegyricus.txt"
-    ]
+        "pliny.panegyricus.txt",
+    ],
 }
 
 
@@ -193,10 +189,12 @@ if __name__ == "__main__":
     corpora = {}
     for a in AUTHOR_DIRS:
         author_dir = base_path + a
-        texts = [author_dir+"/"+t for t in os.listdir(author_dir) if t[-3:] == "txt"]
+        texts = [
+            author_dir + "/" + t for t in os.listdir(author_dir) if t[-3:] == "txt"
+        ]
         corpora[a] = texts
     for k, v in AUTHOR_TXTS.items():
-        texts = [base_path+t for t in v]
+        texts = [base_path + t for t in v]
         corpora[k] = texts
     with open(f"../assets/{CORPUS_NAME}_corpora.json", "w") as f:
         json.dump(corpora, f, indent=4, sort_keys=True)
