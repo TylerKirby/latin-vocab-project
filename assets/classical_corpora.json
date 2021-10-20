@@ -620,7 +620,10 @@
         "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/pomponius3.txt"
     ],
     "propertius": [
-        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/propertius1.txt"
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/propertius1.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/prop2.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/prop3.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/prop4.txt"
     ],
     "quintilian_decl_mai": [
         "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/quintilian/quintilian.decl.mai1.txt",
