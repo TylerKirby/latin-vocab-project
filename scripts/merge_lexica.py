@@ -1,5 +1,5 @@
 """
-Script for combining author based frequency lists into a single file.
+Compute
 """
 import os
 
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     lexica_paths = [
         AUTHOR_LEXICA_PATH + "/" + p
         for p in os.listdir(AUTHOR_LEXICA_PATH)
-        if p[-3:] == "csv"
+        if p[-3:] == "csv" and "full_corpus" not in p
     ]
     combined_lexica = {}
     for p in lexica_paths:
@@ -29,5 +29,5 @@ if __name__ == "__main__":
         combined_lexica, orient="index", columns=["count"]
     )
     final_df.to_csv(AUTHOR_LEXICA_PATH + "/" + "full_corpus.csv")
-    with pd.ExcelWriter("../frequency_tables/full_corpus.xlsx") as writer:
+    with pd.ExcelWriter("../workbooks/full_corpus.xlsx") as writer:
         final_df.to_excel(writer, sheet_name="full_corpus")

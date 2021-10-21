@@ -1,3 +1,7 @@
+"""
+Create JSON of authors and text paths.
+"""
+
 import json
 import os
 

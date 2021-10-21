@@ -1,3 +1,7 @@
+"""
+Iterate through JSON of authors and text paths, and process them into CSVs of frequency tables.
+"""
+
 import argparse
 import json
 import os
@@ -5,7 +9,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-from utils.corpus import CorpusAnalytics
+from modules import CorpusAnalytics
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -39,7 +43,7 @@ if __name__ == "__main__":
     analytics = CorpusAnalytics("lat", lemmatizer_type="lamonpy")
 
     completed_analyses = [p[:-11] for p in os.listdir(OUTPUT_DIR) if p[-3:] == "csv"]
-    with pd.ExcelWriter(f"{OUTPUT_DIR}/vocabulary_freq_no_proper_nouns.xlsx") as writer:
+    with pd.ExcelWriter("workbooks/vocabulary_freq_no_proper_nouns.xlsx") as writer:
         for author in tqdm(corpora.keys(), desc="Authors"):
             if author in completed_analyses and args.all == 0:
                 print(f"Skipping {author}")
@@ -52,7 +56,7 @@ if __name__ == "__main__":
 
     if args.ner:
         with pd.ExcelWriter(
-            f"{OUTPUT_DIR}/vocabulary_freq_with_proper_nouns.xlsx"
+            "workbooks/vocabulary_freq_with_proper_nouns.xlsx"
         ) as writer:
             for author in tqdm(corpora.keys()):
                 vocab_freq = analytics.process_corpus(corpora[author], filter_ner=False)

@@ -1,4 +1,4 @@
-from utils.corpus import CorpusAnalytics
+from modules import CorpusAnalytics
 
 with open(
     "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/vergil/aen1.txt", "r"

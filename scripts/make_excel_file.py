@@ -1,5 +1,5 @@
 """
-Script for combining all csvs into a single excel file.
+Combine all frequency CSVs into a single excel file.
 """
 import argparse
 import os
@@ -20,7 +20,7 @@ if __name__ == "__main__":
         "--output_path",
         type=str,
         help="path to save csv",
-        default="../frequency_tables/classical_corpus_no_ner.xlsx",
+        default="../workbooks/classical_corpus_no_ner.xlsx",
     )
     args = parser.parse_args()
 
