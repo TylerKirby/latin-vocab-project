@@ -1,5 +1,6 @@
 """
-Compute
+Compute full corpus word frequencies.
+Requires that author level word frequencies have already been computed.
 """
 import os
 

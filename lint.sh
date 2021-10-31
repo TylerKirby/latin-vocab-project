@@ -1,1 +1,1 @@
-black utils tests && isort utils tests
+black scripts modules tests && isort scripts modules tests
