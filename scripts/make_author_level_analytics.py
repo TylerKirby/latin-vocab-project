@@ -1,3 +1,4 @@
+import json
 import os
 
 import pandas as pd
@@ -15,6 +16,8 @@ if __name__ == "__main__":
         "../frequency_tables/full_corpus_no_ner.csv", index_col=0
     )
     word_analytics_df = pd.read_csv("../analytics/word_level_rareness.csv", index_col=0)
+    with open("../assets/author_genres.json") as f:
+        author_genres = json.load(f)
     for p in author_table_paths:
         author = p.split("/")[-1][:-11]
         df = pd.read_csv(p, index_col=0)
@@ -34,10 +37,11 @@ if __name__ == "__main__":
         )
         df["rareness"] = df["rareness"] * df["count"]
         R = df["rareness"].sum() / total_words
-
-        author_stats[author] = [TTR, HR, R]
+        # Genre
+        genre = author_genres[author]
+        author_stats[author] = [TTR, HR, R, genre]
     author_level_analytics_df = pd.DataFrame.from_dict(
-        author_stats, orient="index", columns=["TTR", "HR", "R"]
+        author_stats, orient="index", columns=["TTR", "HR", "R", "genre"]
     )
     author_level_analytics_df["R_scaled"] = (
         author_level_analytics_df["R"] - author_level_analytics_df["R"].min()
