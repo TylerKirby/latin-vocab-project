@@ -45,5 +45,6 @@
   "caesar": "prose",
   "catullus": "poetry",
   "ilias_latina": "poetry",
-  "aug_res_gestae": "prose"
+  "aug_res_gestae": "prose",
+  "cato": "prose"
 }

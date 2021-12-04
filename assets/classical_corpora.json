@@ -43,6 +43,10 @@
     "carmina_pripea": [
         "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/priapea.txt"
     ],
+    "cato": [
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/cato/cato.agri.txt",
+        "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/cato/cato.frag.txt"
+    ],
     "catullus": [
         "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/catullus.txt"
     ],

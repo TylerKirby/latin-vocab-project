@@ -26,6 +26,7 @@ AUTHOR_DIRS = [
     "statius",
     "columella",
     "hyginus",
+    "cato"
 ]
 AUTHOR_TXTS = {
     "manilius": [
