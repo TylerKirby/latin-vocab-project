@@ -1,1 +1,1 @@
-black scripts modules tests && isort scripts modules tests
+black scripts modules tests app.py && isort scripts modules tests app.py
