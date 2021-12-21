@@ -49,4 +49,5 @@ class Analysis:
                 "perc_known_words",
             ],
         )
+        author_readability_df.sort_index(inplace=True)
         return author_readability_df

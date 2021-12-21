@@ -10,7 +10,19 @@ import streamlit as st
 from modules import Analysis, download_data
 
 
-download_data()
+if len(os.listdir(data_path)) == 0:
+    download_data()
+else:
+    print("Data already downloaded")
+
+
+@st.cache
+def convert_dataframe(df):
+    """
+    Convert dataframe to binary form for downloading.
+    """
+    return df.to_csv().encode("utf-8")
+
 
 analysis = Analysis(
     "assets/classical_corpora.json",
@@ -34,3 +46,9 @@ known_words_size = st.number_input(
 )
 author_readability_df = analysis.author_readability(known_words_size)
 st.dataframe(author_readability_df)
+st.download_button(
+    label="Download Author Readability Data",
+    data=convert_dataframe(author_readability_df),
+    file_name=f"author_readability_stats_{known_words_size}.csv",
+    mime="text/csv"
+)
