@@ -1,10 +1,3 @@
-"""
-Create JSON of authors and text paths.
-"""
-
-import json
-import os
-
 CORPUS_NAME = "classical"
 AUTHOR_DIRS = [
     "vergil",
@@ -187,19 +180,3 @@ AUTHOR_TXTS = {
         "pliny.panegyricus.txt",
     ],
 }
-
-
-if __name__ == "__main__":
-    base_path = "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/"
-    corpora = {}
-    for a in AUTHOR_DIRS:
-        author_dir = base_path + a
-        texts = [
-            author_dir + "/" + t for t in os.listdir(author_dir) if t[-3:] == "txt"
-        ]
-        corpora[a] = texts
-    for k, v in AUTHOR_TXTS.items():
-        texts = [base_path + t for t in v]
-        corpora[k] = texts
-    with open(f"../assets/{CORPUS_NAME}_corpora.json", "w") as f:
-        json.dump(corpora, f, indent=4, sort_keys=True)

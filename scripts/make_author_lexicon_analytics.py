@@ -2,15 +2,15 @@
 Create table of percent of words known and percent of known lemmata
 for some specifed n.
 """
-import os
-import json
-import random
 import argparse
+import json
+import os
+import random
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from modules import Lexicon, LexiconOptions, CorpusAnalytics
+from modules import CorpusAnalytics, Lexicon, LexiconOptions
 
 random.seed(1)
 
@@ -25,7 +25,9 @@ SAMPLE_SIZE = 250
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--n_lexical_size", required=True, type=int, help="size of lexicon")
+    parser.add_argument(
+        "-n", "--n_lexical_size", required=True, type=int, help="size of lexicon"
+    )
     args = parser.parse_args()
 
     n = args.n_lexical_size
@@ -45,8 +47,7 @@ if __name__ == "__main__":
     )
     lexicon_opts = LexiconOptions("freq", n)
     full_corpus_lexicon = Lexicon(
-        "../frequency_tables/full_corpus_no_ner.csv",
-        lexicon_opts
+        "../frequency_tables/full_corpus_no_ner.csv", lexicon_opts
     )
     full_corpus_lemmata = full_corpus_lexicon.lexicon.index.tolist()
     author_lexicons = {}
@@ -90,10 +91,14 @@ if __name__ == "__main__":
             page_same_lemmata = list(set(full_corpus_lemmata) & set(page_lemmata))
             perc_known_lemmata = len(page_same_lemmata) / len(author_lemmata)
             page_known_lemmata.append(perc_known_lemmata)
-            page_df = pd.DataFrame.from_dict(page_freq.lemmata_frequencies, orient="index", columns=["count"])
+            page_df = pd.DataFrame.from_dict(
+                page_freq.lemmata_frequencies, orient="index", columns=["count"]
+            )
             page_total_words = page_df["count"].sum()
             if page_total_words == 0:
-                print(f"Page total words is 0 for {random_text} with page start {page_start}")
+                print(
+                    f"Page total words is 0 for {random_text} with page start {page_start}"
+                )
                 continue
             page_known_words_count = page_df.loc[page_same_lemmata]["count"].sum()
             page_perc_known_words = page_known_words_count / page_total_words
@@ -102,14 +107,24 @@ if __name__ == "__main__":
         page_known_words = np.array(page_known_words)
 
         # Stats
-        author_lexicons[author] = [perc_known_lemmata, perc_known_words, page_known_lemmata.mean(), page_known_lemmata.std(), page_known_words.mean(), page_known_words.std()]
+        author_lexicons[author] = [
+            perc_known_lemmata,
+            perc_known_words,
+            page_known_lemmata.mean(),
+            page_known_lemmata.std(),
+            page_known_words.mean(),
+            page_known_words.std(),
+        ]
     author_lexicons_df = pd.DataFrame.from_dict(
-        author_lexicons, orient="index", columns=[
+        author_lexicons,
+        orient="index",
+        columns=[
             "perc_known_unique_lemmata",
             "perc_known_words",
             "page_known_lemmata_mean",
             "page_known_lemmata_std",
             "page_known_words_mean",
-            "page_known_words_std"
-        ])
+            "page_known_words_std",
+        ],
+    )
     author_lexicons_df.to_csv(f"../analytics/author_lexicon_n_{n}.csv")
