@@ -36,7 +36,12 @@ st.title("Latin Vocabulary Data Explorer")
 # Author readability
 st.header("Author Readability Statistics")
 st.write(
-    "Create tables of statistics for authors to compute their readability according to multiple metrics."
+    """
+    Create tables of statistics for authors to compute their readability according to multiple metrics.\n
+    Use the input box below to change the size of known words, i.e., the set of *n* most frequent words in Classical Latin.\n
+    The first column in the table below is the percent of unique words in an author that a reader would recognize assuming
+    they know all of the words in the known words list. The second column is the percent of total words a reader would recognizer.
+    """
 )
 known_words_size = st.number_input(
     "Set size of known words",
