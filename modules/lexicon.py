@@ -17,3 +17,6 @@ class Lexicon:
             self.lexicon = freq_table[:n]
         else:
             raise AssertionError(f"{options.type} is not a valid lexicon type")
+
+    def to_freq_table(self):
+        return self.lexicon

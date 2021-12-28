@@ -7,7 +7,7 @@ os.environ["CLTK_DATA"] = data_path
 
 import streamlit as st
 
-from modules import Analysis, download_data
+from modules import Analysis, download_data, Lexicon, LexiconOptions
 
 
 if len(os.listdir(data_path)) == 0:
@@ -32,6 +32,27 @@ analysis = Analysis(
 
 # App header
 st.title("Latin Vocabulary Data Explorer")
+
+# Frequency table
+st.header("Frequency Tables")
+st.write("Create table of most frequent words in Classical Latin.")
+freq_table_size = st.number_input(
+    "Set size of most frequent words",
+    help="Set the number of most frequent words known for analysis",
+    min_value=1,
+    value=2000,
+    key=1
+)
+lexicon_opts = LexiconOptions("freq", freq_table_size)
+full_corpus_lexicon = Lexicon("frequency_tables/full_corpus_no_ner.csv", lexicon_opts)
+freq_table = full_corpus_lexicon.to_freq_table()
+st.dataframe(freq_table)
+st.download_button(
+    label="Download Frequency Table",
+    data=convert_dataframe(freq_table),
+    file_name=f"frequency_table_{freq_table_size}.csv",
+    mime="text/csv"
+)
 
 # Author readability
 st.header("Author Readability Statistics")
