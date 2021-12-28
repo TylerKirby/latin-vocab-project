@@ -1,10 +1,14 @@
 import json
+import random
 import os
 
+import numpy as np
 import pandas as pd
 
 from .corpus import CorpusAnalytics
 from .lexicon import Lexicon, LexiconOptions
+
+random.seed(42)
 
 
 class Analysis:
@@ -20,6 +24,12 @@ class Analysis:
         self.frequenter = CorpusAnalytics("lat", lemmatizer_type="lamonpy")
 
     def author_readability(self, lexicon_size) -> pd.DataFrame:
+        """
+        Compute percent of unique lemmata known and percent of total words known for all authors for a given lexicon.
+        size.
+        :param lexicon_size:
+        :return:
+        """
         lexicon_opts = LexiconOptions("freq", lexicon_size)
         full_corpus_lexicon = Lexicon(self.full_corpus_freq_table_path, lexicon_opts)
         full_corpus_lemmata = full_corpus_lexicon.lexicon.index.tolist()
@@ -51,3 +61,78 @@ class Analysis:
         )
         author_readability_df.sort_index(inplace=True)
         return author_readability_df
+
+    def author_readability_sampling(self, lexicon_size, n_samples, sample_size):
+        """
+        Compute empirical mean and standard deviation of percent known unique words and percent total unique words for
+        a given lexicon.
+        :param lexicon_size:
+        :return:
+        """
+        lexicon_opts = LexiconOptions("freq", lexicon_size)
+        full_corpus_lexicon = Lexicon(self.full_corpus_freq_table_path, lexicon_opts)
+        full_corpus_lemmata = full_corpus_lexicon.lexicon.index.tolist()
+        author_readability_sampling = {}
+        for p in self.author_table_paths:
+            author = p.split("/")[-1][:-11]
+            df = pd.read_csv(p, index_col=0)
+            author_lemmata = df.index.tolist()
+            # Percent of words known from sampled pages
+            author_texts = self.corpus_json[author]
+            page_known_lemmata = []
+            page_known_words = []
+            for i in range(n_samples):
+                random_text = random.choice(author_texts)
+                try:
+                    with open(random_text) as f:
+                        text = f.read()
+                except FileNotFoundError:
+                    print(f"Text {random_text} not found")
+                    continue
+                tokenized = text.split(" ")
+                if len(tokenized) <= 250:
+                    print(f"Sample too small for {random_text}")
+                    continue
+                possible_page_start = len(tokenized) - sample_size
+                page_start = random.randint(0, possible_page_start)
+                page_end = page_start + sample_size
+                page = " ".join(tokenized[page_start:page_end])
+                page_freq = self.frequenter.process_text(page)
+                page_lemmata = list(page_freq.lemmata_frequencies.keys())
+                page_same_lemmata = list(set(full_corpus_lemmata) & set(page_lemmata))
+                perc_known_lemmata = len(page_same_lemmata) / len(author_lemmata)
+                page_known_lemmata.append(perc_known_lemmata)
+                page_df = pd.DataFrame.from_dict(
+                    page_freq.lemmata_frequencies, orient="index", columns=["count"]
+                )
+                page_total_words = page_df["count"].sum()
+                if page_total_words == 0:
+                    print(
+                        f"Page total words is 0 for {random_text} with page start {page_start}"
+                    )
+                    continue
+                page_known_words_count = page_df.loc[page_same_lemmata]["count"].sum()
+                page_perc_known_words = page_known_words_count / page_total_words
+                page_known_words.append(page_perc_known_words)
+            page_known_lemmata = np.array(page_known_lemmata)
+            page_known_words = np.array(page_known_words)
+
+            # Stats
+            author_readability_sampling[author] = [
+                page_known_lemmata.mean(),
+                page_known_lemmata.std(),
+                page_known_words.mean(),
+                page_known_words.std(),
+            ]
+        author_readability_sampling_df = pd.DataFrame.from_dict(
+            author_readability_sampling,
+            orient="index",
+            columns=[
+                "perc_known_unique_lemmata_mean",
+                "perc_known_unique_lemmata_std",
+                "perc_known_words_mean",
+                "perc_known_words_std"
+            ],
+        )
+        author_readability_sampling_df.sort_index(inplace=True)
+        return author_readability_sampling_df
