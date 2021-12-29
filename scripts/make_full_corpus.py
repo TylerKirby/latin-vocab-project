@@ -29,6 +29,6 @@ if __name__ == "__main__":
     final_df = pd.DataFrame.from_dict(
         combined_lexica, orient="index", columns=["count"]
     )
-    final_df.to_csv(AUTHOR_LEXICA_PATH + "/" + "full_corpus.csv")
+    final_df.to_csv(AUTHOR_LEXICA_PATH + "/" + "full_corpus_no_ner.csv")
     with pd.ExcelWriter("../workbooks/full_corpus.xlsx") as writer:
         final_df.to_excel(writer, sheet_name="full_corpus")
