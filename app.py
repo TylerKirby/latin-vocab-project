@@ -6,6 +6,7 @@ Path(data_path).mkdir(parents=True, exist_ok=True)
 os.environ["CLTK_DATA"] = data_path
 
 import streamlit as st
+import pandas as pd
 
 from modules import Analysis, download_data, Lexicon, LexiconOptions
 
@@ -36,6 +37,9 @@ st.title("Latin Vocabulary Data Explorer")
 # Frequency table
 st.header("Frequency Tables")
 st.write("Create table of most frequent words in Classical Latin.")
+authors = [a[:-11] for a in os.listdir("frequency_tables") if a[-11:] == "_no_ner.csv"]
+authors.sort()
+author = st.selectbox("Select author or full corpus for lexicon", authors)
 freq_table_size = st.number_input(
     "Set size of most frequent words",
     help="Set the number of most frequent words known for analysis",
@@ -44,8 +48,8 @@ freq_table_size = st.number_input(
     key=1
 )
 lexicon_opts = LexiconOptions("freq", freq_table_size)
-full_corpus_lexicon = Lexicon("frequency_tables/full_corpus_no_ner.csv", lexicon_opts)
-freq_table = full_corpus_lexicon.to_freq_table()
+lexicon = Lexicon(f"frequency_tables/{author}_no_ner.csv", lexicon_opts)
+freq_table = lexicon.to_freq_table()
 st.dataframe(freq_table)
 st.download_button(
     label="Download Frequency Table",
@@ -85,38 +89,25 @@ st.header("Author Readability Sampling Statistics")
 st.write(
     """
     Create tables of statistics for authors to compute their readability according to multiple metrics by sampling *n* number of pages.\n
-    Use the first input box below to change the size of known words, i.e., the set of *n* most frequent words in Classical Latin.\n
-    The second two input boxes set the parameters for sampling the text. \n
+    Use the select box below to choose the size of the known lexicon.\n
     The first two columns in the table below are the mean and standard deviation of the percent of unique words in an 
     author that a reader would recognize assuming they know all of the words in the known words list. 
     The second two columns are the mean and standard deviation of the percent of total words a reader would recognizer.\n
-    **NOTE: This analysis can take a long time to run on a large number of samples.**
     """
 )
-known_words_size_sampling = st.number_input(
+known_words_size_sampling = st.selectbox(
     "Set size of known words",
-    help="Set the number of most frequent words known for analysis",
-    min_value=1,
-    value=2000,
-    key=2
+    [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000],
+    index=3
 )
-n_samples = st.number_input(
-    "Number of samples per author",
-    help="Set the number of samples to be taken for each author",
-    min_value=1,
-    value=1,
-)
-sample_size = st.number_input(
-    "Sample size in words",
-    help="Set how many words is included in each sample",
-    min_value=1,
-    value=250
-)
-author_readability_sampling_df = analysis.author_readability_sampling(known_words_size, n_samples, sample_size)
+author_readability_sampling_df = pd.read_csv(f"analytics/author_lexicon_n_{known_words_size_sampling}.csv", index_col=0)
+author_readability_sampling_df.sort_index(inplace=True)
+author_readability_sampling_df.drop("cato", inplace=True)
+author_readability_sampling_df.drop(columns=["perc_known_unique_lemmata", "perc_known_words"], axis=1, inplace=True)
 st.dataframe(author_readability_sampling_df)
 st.download_button(
     label="Download Author Readability Sampling Data",
     data=convert_dataframe(author_readability_sampling_df),
-    file_name=f"author_readability_sampling_stats_{known_words_size}_{n_samples}_{sample_size}.csv",
+    file_name=f"author_readability_sampling_stats_{known_words_size}.csv",
     mime="text/csv"
 )
