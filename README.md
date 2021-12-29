@@ -2,6 +2,8 @@ Latin Vocabulary Project
 =
 Repository for code and data related to Latin vocabulary project.
 
+## Current Version: 4
+
 # Running the App
 
 Run the app with `streamlit run app.py`.
