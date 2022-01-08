@@ -5,8 +5,7 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import Dict, List, Tuple, Union
 
-from cltk.alphabet.lat import (dehyphenate, drop_latin_punctuation,
-                               normalize_lat)
+from cltk.alphabet.lat import dehyphenate, drop_latin_punctuation, normalize_lat
 from cltk.lemmatize.lat import LatinBackoffLemmatizer
 from cltk.ner.ner import tag_ner
 from cltk.sentence.lat import LatinPunktSentenceTokenizer

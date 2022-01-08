@@ -131,7 +131,7 @@ class Analysis:
                 "perc_known_unique_lemmata_mean",
                 "perc_known_unique_lemmata_std",
                 "perc_known_words_mean",
-                "perc_known_words_std"
+                "perc_known_words_std",
             ],
         )
         author_readability_sampling_df.sort_index(inplace=True)
