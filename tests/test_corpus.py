@@ -1,4 +1,9 @@
+from cltk.data.fetch import FetchCorpus
+
 from modules import CorpusAnalytics
+
+corpus_downloader = FetchCorpus(language="lat")
+corpus_downloader.import_corpus("lat_models_cltk")
 
 with open("tests/aen1.txt", "r") as f:
     text = f.read()
