@@ -1,6 +1,7 @@
 # Need to set path env var before importing cltk
 import os
 from pathlib import Path
+
 data_path = os.getcwd() + "/data"
 Path(data_path).mkdir(parents=True, exist_ok=True)
 os.environ["CLTK_DATA"] = data_path
@@ -45,7 +46,7 @@ freq_table_size = st.number_input(
     help="Set the number of most frequent words known for analysis",
     min_value=1,
     value=2000,
-    key=1
+    key=1,
 )
 lexicon_opts = LexiconOptions("freq", freq_table_size)
 lexicon = Lexicon(f"frequency_tables/{author}_no_ner.csv", lexicon_opts)
@@ -55,7 +56,7 @@ st.download_button(
     label="Download Frequency Table",
     data=convert_dataframe(freq_table),
     file_name=f"frequency_table_{freq_table_size}.csv",
-    mime="text/csv"
+    mime="text/csv",
 )
 
 # Author readability
@@ -73,7 +74,7 @@ known_words_size = st.number_input(
     help="Set the number of most frequent words known for analysis",
     min_value=1,
     value=2000,
-    key=1
+    key=1,
 )
 author_readability_df = analysis.author_readability(known_words_size)
 st.dataframe(author_readability_df)
@@ -81,7 +82,7 @@ st.download_button(
     label="Download Author Readability Data",
     data=convert_dataframe(author_readability_df),
     file_name=f"author_readability_stats_{known_words_size}.csv",
-    mime="text/csv"
+    mime="text/csv",
 )
 
 # Author readability sampling
@@ -98,16 +99,20 @@ st.write(
 known_words_size_sampling = st.selectbox(
     "Set size of known words",
     [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000],
-    index=3
+    index=3,
 )
-author_readability_sampling_df = pd.read_csv(f"analytics/author_lexicon_n_{known_words_size_sampling}.csv", index_col=0)
+author_readability_sampling_df = pd.read_csv(
+    f"analytics/author_lexicon_n_{known_words_size_sampling}.csv", index_col=0
+)
 author_readability_sampling_df.sort_index(inplace=True)
 author_readability_sampling_df.drop("cato", inplace=True)
-author_readability_sampling_df.drop(columns=["perc_known_unique_lemmata", "perc_known_words"], axis=1, inplace=True)
+author_readability_sampling_df.drop(
+    columns=["perc_known_unique_lemmata", "perc_known_words"], axis=1, inplace=True
+)
 st.dataframe(author_readability_sampling_df)
 st.download_button(
     label="Download Author Readability Sampling Data",
     data=convert_dataframe(author_readability_sampling_df),
     file_name=f"author_readability_sampling_stats_{known_words_size}.csv",
-    mime="text/csv"
+    mime="text/csv",
 )
