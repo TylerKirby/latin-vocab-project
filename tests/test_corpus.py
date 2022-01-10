@@ -1,8 +1,6 @@
 from modules import CorpusAnalytics
 
-with open(
-    "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/vergil/aen1.txt", "r"
-) as f:
+with open("tests/aen1.txt", "r") as f:
     text = f.read()
 
 cltk_analytics = CorpusAnalytics("lat", lemmatizer_type="cltk")
@@ -16,7 +14,7 @@ def test_process_text_title():
 
 def test_process_text_raw_text():
     vergil_1 = cltk_analytics.process_text(text)
-    correct = "Vergil: Aeneid I\n\t\t \n\n\t"
+    correct = "Vergil: Aeneid I"
     assert vergil_1.raw_text[: len(correct)] == correct
 
 
@@ -111,8 +109,8 @@ def test_ner_tagger():
 
 def test_process_corpus():
     test_texts = [
-        "/Users/tyler/Projects/latin-vocab-project/tests/test_text1.txt",
-        "/Users/tyler/Projects/latin-vocab-project/tests/test_text2.txt",
+        "tests/test_text1.txt",
+        "tests/test_text2.txt",
     ]
     actual = cltk_analytics.process_corpus(test_texts)
     correct = {"quo": 2, "abutor": 2, "patientia": 2, "nos": 1}
