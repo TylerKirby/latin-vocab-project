@@ -21,7 +21,7 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GAR_LOCATION: us-central1
   GKE_CLUSTER: streamlit-cluster
-  GKE_ZONE: us-central1-c
+  GKE_ZONE: us-central1
   DEPLOYMENT_NAME: streamlit-app
   REPOSITORY: streamlit
   IMAGE: static-site
