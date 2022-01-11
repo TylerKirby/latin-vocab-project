@@ -30,7 +30,7 @@ class CorpusAnalytics:
             self.sent_tokenizer = LatinPunktSentenceTokenizer()
             if lemmatizer_type == "cltk":
                 self.lemmatizer = LatinBackoffLemmatizer()
-                with open("../modules/lemma_exceptions.json") as f:
+                with open("modules/lemma_exceptions.json") as f:
                     self.lemma_exceptions = json.loads(f.read())
                 self.exclude_list = ["aeeumlre", "aeumlre", "ltcibusgt"]
             elif lemmatizer_type == "lamonpy":
