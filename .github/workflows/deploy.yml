@@ -23,8 +23,8 @@ env:
   GKE_CLUSTER: streamlit-cluster
   GKE_ZONE: us-central1
   DEPLOYMENT_NAME: streamlit-app
-  REPOSITORY: streamlit
-  IMAGE: static-site
+  REPOSITORY: latin-vocab-app
+  IMAGE: streamlit
 
 permissions:
     contents: 'read'
