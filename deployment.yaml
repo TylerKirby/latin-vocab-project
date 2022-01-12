@@ -2,7 +2,7 @@
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "streamlit-app"
+  name: "latin-vocab"
   namespace: "default"
   labels:
     app: "latin-vocab"
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: "latin-vocab"
-        image: "streamlit-app:latest"
+        image: "latin-vocab:latest"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
@@ -26,11 +26,11 @@ metadata:
   name: "streamlit-app-hpa-cvvn"
   namespace: "default"
   labels:
-    app: "streamlit-app"
+    app: "latin-vocab"
 spec:
   scaleTargetRef:
     kind: "Deployment"
-    name: "streamlit-app"
+    name: "latin-vocab"
     apiVersion: "apps/v1"
   minReplicas: 1
   maxReplicas: 3
