@@ -5,19 +5,19 @@ metadata:
   name: "streamlit-app"
   namespace: "default"
   labels:
-    app: "streamlit-app"
+    app: "latin-vocab"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "streamlit-app"
+      app: "latin-vocab"
   template:
     metadata:
       labels:
-        app: "streamlit-app"
+        app: "latin-vocab"
     spec:
       containers:
-      - name: "streamlit-app"
+      - name: "latin-vocab"
         image: "streamlit-app:latest"
 ---
 apiVersion: "autoscaling/v2beta1"
