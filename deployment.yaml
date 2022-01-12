@@ -2,38 +2,38 @@
 apiVersion: "apps/v1"
 kind: "Deployment"
 metadata:
-  name: "nginx-1"
+  name: "streamlit-app"
   namespace: "default"
   labels:
-    app: "nginx-1"
+    app: "streamlit-app"
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: "nginx-1"
+      app: "streamlit-app"
   template:
     metadata:
       labels:
-        app: "nginx-1"
+        app: "streamlit-app"
     spec:
       containers:
-      - name: "nginx-1"
-        image: "nginx:latest"
+      - name: "streamlit-app"
+        image: "streamlit-app:latest"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
 metadata:
-  name: "nginx-1-hpa-cvvn"
+  name: "streamlit-app-hpa-cvvn"
   namespace: "default"
   labels:
-    app: "nginx-1"
+    app: "streamlit-app"
 spec:
   scaleTargetRef:
     kind: "Deployment"
-    name: "nginx-1"
+    name: "streamlit-app"
     apiVersion: "apps/v1"
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
   metrics:
   - type: "Resource"
     resource:
