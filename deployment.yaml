@@ -19,6 +19,7 @@ spec:
       containers:
       - name: "streamlit"
         image: "us-central1-docker.pkg.dev/latin-vocab-project/latin-vocab-app/streamlit:latest"
+        imagePullPolicy: "Always"
 ---
 apiVersion: "autoscaling/v2beta1"
 kind: "HorizontalPodAutoscaler"
