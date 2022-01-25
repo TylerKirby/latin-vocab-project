@@ -1,5 +1,6 @@
 # Need to set path env var before importing cltk
 import os
+import json
 from pathlib import Path
 
 data_path = os.getcwd() + "/data"
@@ -8,12 +9,36 @@ os.environ["CLTK_DATA"] = data_path
 
 import streamlit as st
 import pandas as pd
+from cltk.data.fetch import FetchCorpus
 
-from modules import Analysis, download_data, Lexicon, LexiconOptions
+from modules import Analysis, Lexicon, LexiconOptions, AUTHOR_DIRS, AUTHOR_TXTS, CORPUS_NAME
 
 
+@st.cache
+def download_data():
+    """
+    Download data and create json of texts.
+    """
+    # Download Latin Library
+    corpus_downloader = FetchCorpus(language="lat")
+    corpus_downloader.import_corpus("lat_text_latin_library")
+    corpus_downloader.import_corpus("lat_models_cltk")
+    # Create corpus json
+    texts_path = os.getcwd() + "/data/lat/text/lat_text_latin_library/"
+    corpora = {}
+    for a in AUTHOR_DIRS:
+        author_dir = texts_path + a
+        texts = [
+            author_dir + "/" + t for t in os.listdir(author_dir) if t[-3:] == "txt"
+        ]
+        corpora[a] = texts
+    for k, v in AUTHOR_TXTS.items():
+        texts = [texts_path + t for t in v]
+        corpora[k] = texts
+    with open(f"assets/{CORPUS_NAME}_corpora.json", "w") as f:
+        json.dump(corpora, f, indent=4, sort_keys=True)
+    print("Downloaded data")
 download_data()
-
 
 @st.cache
 def convert_dataframe(df):
