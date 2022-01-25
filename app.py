@@ -12,10 +12,7 @@ import pandas as pd
 from modules import Analysis, download_data, Lexicon, LexiconOptions
 
 
-if len(os.listdir(data_path)) == 0:
-    download_data()
-else:
-    print("Data already downloaded")
+download_data()
 
 
 @st.cache
