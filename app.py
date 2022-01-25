@@ -19,6 +19,9 @@ def download_data():
     """
     Download data and create json of texts.
     """
+    if Path("data/lat").exists():
+        print("Data already downloaded")
+        return
     # Download Latin Library
     corpus_downloader = FetchCorpus(language="lat")
     corpus_downloader.import_corpus("lat_text_latin_library")
