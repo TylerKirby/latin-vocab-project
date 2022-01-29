@@ -10,7 +10,7 @@ import random
 import numpy as np
 import pandas as pd
 
-from modules import CorpusAnalytics, Lexicon, LexiconOptions
+from submission_code.modules import CorpusAnalytics, Lexicon, LexiconOptions
 
 random.seed(1)
 

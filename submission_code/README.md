@@ -20,13 +20,6 @@ This folder contains computed frequency tables by author.
 ## `modules`
 This files define the framework used for the project.
 
-## `notebooks`
-All Jupyter notebooks are stored here.
-- `author_level_stats`: Exploratory data analysis of author level stats.
-- `genre_analysis`: Exploratory data analysis of how genre relates to lexical difficulty.
-- `ner_experiment`: Notebook showing results of corpus module on a sample text.
-- `word_level_metrics_experiment`: Exploratory data analysis of word level stats.
-
 ## `samples`
 Files generated for tests or other samples.
 

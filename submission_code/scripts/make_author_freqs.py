@@ -9,7 +9,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-from modules import CorpusAnalytics
+from submission_code.modules import CorpusAnalytics
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

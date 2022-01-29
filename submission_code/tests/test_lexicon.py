@@ -1,4 +1,4 @@
-from modules import Lexicon, LexiconOptions
+from submission_code.modules import Lexicon, LexiconOptions
 
 
 def test_lexicon_freq():

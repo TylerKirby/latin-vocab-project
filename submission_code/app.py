@@ -19,7 +19,7 @@ def download_data():
     """
     Download data and create json of texts.
     """
-    if Path("data/lat").exists():
+    if Path("../data/lat").exists():
         print("Data already downloaded")
         return
     # Download Latin Library

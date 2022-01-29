@@ -1,6 +1,6 @@
 from cltk.data.fetch import FetchCorpus
 
-from modules import CorpusAnalytics
+from submission_code.modules import CorpusAnalytics
 
 corpus_downloader = FetchCorpus(language="lat")
 corpus_downloader.import_corpus("lat_models_cltk")

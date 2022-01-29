@@ -189,7 +189,7 @@ AUTHOR_TXTS = {
 
 
 if __name__ == "__main__":
-    base_path = "/Users/tyler/cltk_data/latin/text/latin_text_latin_library/"
+    base_path = "/Users/****/cltk_data/latin/text/latin_text_latin_library/"
     corpora = {}
     for a in AUTHOR_DIRS:
         author_dir = base_path + a

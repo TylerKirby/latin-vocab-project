@@ -4,6 +4,4 @@ __pycache__/
 .idea/
 data/
 .pytest_cache/
-submission_code.zip
-submission_code
 .DS_Store
