@@ -2,17 +2,9 @@ Latin Vocabulary Project
 =
 Repository for code and data related to Latin vocabulary project.
 
-## Current Version: 4
-
 # Running the App
 
 Run the app with `streamlit run app.py`.
-
-To redeploy, run
-1. Build new image: `docker build -t us-central1-docker.pkg.dev/latin-vocab-project/latin-vocab-app/streamlit:v2 .`
-2. Push image to container registry: `docker push us-central1-docker.pkg.dev/latin-vocab-project/latin-vocab-app/streamlit:v2`
-3. Deploy new image: `kubectl set image deployment/streamlit-app streamlit-app=us-central1-docker.pkg.dev/latin-vocab-project/latin-vocab-app/streamlit:v2`
-4. Watch deployment: `watch kubectl get pods`
 
 # Project Structure
 
